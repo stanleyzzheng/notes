@@ -1,0 +1,14 @@
+[Unit]
+Description=Notes Application
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /home/ubuntu/notes/target/Note-0.0.1-SNAPSHOT.jar
+WorkingDirectory=/home/ubuntu/notes/target
+User=ubuntu
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

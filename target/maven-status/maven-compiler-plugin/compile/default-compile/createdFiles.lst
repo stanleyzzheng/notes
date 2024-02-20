@@ -2,4 +2,5 @@ example\note\NoteApplication.class
 example\note\NoteRepository.class
 example\note\NoteController.class
 example\note\SecurityConfig.class
+example\note\HelloController.class
 example\note\Note.class
