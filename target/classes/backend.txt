@@ -1,0 +1,17 @@
+[Unit]
+Description=My Backend Java App
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /path/to/your/app.jar
+WorkingDirectory=/path/to/your/app
+User=your_username
+Group=your_group
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=my-backend-app
+
+[Install]
+WantedBy=multi-user.target
