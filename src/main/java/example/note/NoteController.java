@@ -55,4 +55,14 @@ public class NoteController {
         noteRepository.save(updatedNote);
         return ResponseEntity.noContent().build();
     }
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deleteNote(@PathVariable Long id, Principal principal){
+        if(noteRepository.existsByIdAndOwner(id, principal.getName())){
+            noteRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
 }

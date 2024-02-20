@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class NoteApplicationTests {
 
+
     @Autowired
     TestRestTemplate restTemplate;
 
@@ -183,6 +184,32 @@ class NoteApplicationTests {
 
 
     }
+    @Test
+    @DirtiesContext
+    void shouldDeleteAnExistingNote(){
+        ResponseEntity<Void> response = restTemplate.withBasicAuth("sarah1","abc123").exchange("/notes/99", HttpMethod.DELETE,null,Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate.withBasicAuth("sarah1", "abc123").getForEntity("/notes/99",String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldNotDeleteANoteThatDoesNotExist(){
+        ResponseEntity<Void> deleteResponse = restTemplate.withBasicAuth("sarah1", "abc123").exchange("/notes/99999", HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldNotAllowDeletionOfNotesTheyDoNotOwn(){
+        ResponseEntity<Void> deleteResponse = restTemplate.withBasicAuth("sarah1", "abc123").exchange("/notes/102",HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        ResponseEntity<String> getResponse = restTemplate.withBasicAuth("kumar2", "xyz789").getForEntity("/notes/102", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+
 
 
 }
